@@ -392,8 +392,8 @@
 
             function calculate() {
                 const total = parseFloat(mealCostInput.value) || 0;
-                const vat = total * 0.12;
-                const withoutVat = total - vat;
+                const withoutVat = total / 1.12;
+                const vat = total - withoutVat;
 
                 vatAmountEl.textContent = fmt(vat);
                 costWithoutVatEl.textContent = fmt(withoutVat);
