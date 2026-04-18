@@ -1,210 +1,469 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#1a1a2e">
-<title>VAT Calculator</title>
-<link rel="manifest" href="manifest.json">
-<style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, user-scalable=no"
+        />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta
+            name="apple-mobile-web-app-status-bar-style"
+            content="black-translucent"
+        />
+        <meta name="theme-color" content="#1a1a2e" />
+        <title>VAT Calculator</title>
+        <link rel="manifest" href="manifest.json" />
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
 
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: #1a1a2e;
-    color: #eee;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 24px 16px;
-  }
+            body {
+                font-family:
+                    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                    sans-serif;
+                background: #1a1a2e;
+                color: #eee;
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 24px 16px;
+            }
 
-  h1 {
-    font-size: 1.6rem;
-    margin-bottom: 24px;
-    text-align: center;
-    color: #e94560;
-  }
+            h1 {
+                font-size: 1.6rem;
+                margin-bottom: 24px;
+                text-align: center;
+                color: #e94560;
+            }
 
-  .card {
-    background: #16213e;
-    border-radius: 16px;
-    padding: 24px;
-    width: 100%;
-    max-width: 480px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
+            .card {
+                background: #16213e;
+                border-radius: 16px;
+                padding: 24px;
+                width: 100%;
+                max-width: 480px;
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+            }
 
-  .field {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
+            .field {
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+            }
 
-  label {
-    font-size: 1rem;
-    color: #aaa;
-    font-weight: 600;
-  }
+            label {
+                font-size: 1rem;
+                color: #aaa;
+                font-weight: 600;
+            }
 
-  input[type="number"] {
-    font-size: 1.8rem;
-    padding: 14px 16px;
-    border: 2px solid #0f3460;
-    border-radius: 12px;
-    background: #0f3460;
-    color: #fff;
-    width: 100%;
-    -moz-appearance: textfield;
-  }
+            input[type="number"] {
+                font-size: 1.8rem;
+                padding: 14px 16px;
+                border: 2px solid #0f3460;
+                border-radius: 12px;
+                background: #0f3460;
+                color: #fff;
+                width: 100%;
+                -moz-appearance: textfield;
+            }
 
-  input[type="number"]:focus {
-    outline: none;
-    border-color: #e94560;
-  }
+            input[type="number"]:focus {
+                outline: none;
+                border-color: #e94560;
+            }
 
-  input[type="number"]::-webkit-inner-spin-button,
-  input[type="number"]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-  }
+            input[type="number"]::-webkit-inner-spin-button,
+            input[type="number"]::-webkit-outer-spin-button {
+                -webkit-appearance: none;
+            }
 
-  .result-box {
-    font-size: 1.8rem;
-    padding: 14px 16px;
-    border-radius: 12px;
-    background: #0f3460;
-    color: #fff;
-    min-height: 56px;
-    display: flex;
-    align-items: center;
-  }
+            .result-box {
+                font-size: 1.8rem;
+                padding: 14px 16px;
+                border-radius: 12px;
+                background: #0f3460;
+                color: #fff;
+                min-height: 56px;
+                display: flex;
+                align-items: center;
+            }
 
-  .pwd-row {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 10px 0;
-  }
+            .pwd-row {
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                padding: 10px 0;
+            }
 
-  .pwd-row input[type="checkbox"] {
-    width: 32px;
-    height: 32px;
-    accent-color: #e94560;
-    cursor: pointer;
-    flex-shrink: 0;
-  }
+            .pwd-row input[type="checkbox"] {
+                width: 32px;
+                height: 32px;
+                accent-color: #e94560;
+                cursor: pointer;
+                flex-shrink: 0;
+            }
 
-  .pwd-row label {
-    font-size: 1.15rem;
-    color: #eee;
-    cursor: pointer;
-  }
+            .pwd-row label {
+                font-size: 1.15rem;
+                color: #eee;
+                cursor: pointer;
+            }
 
-  .divider {
-    border: none;
-    border-top: 1px solid #0f3460;
-  }
+            .divider {
+                border: none;
+                border-top: 1px solid #0f3460;
+            }
 
-  .total-label {
-    color: #e94560;
-    font-size: 1.1rem;
-  }
+            .total-label {
+                color: #e94560;
+                font-size: 1.1rem;
+            }
 
-  .total-value {
-    font-size: 2.2rem;
-    font-weight: 700;
-    background: linear-gradient(135deg, #e94560, #c23152);
-    border-radius: 12px;
-    padding: 16px;
-    text-align: center;
-  }
+            .total-value {
+                font-size: 2.2rem;
+                font-weight: 700;
+                background: linear-gradient(135deg, #e94560, #c23152);
+                border-radius: 12px;
+                padding: 16px;
+                text-align: center;
+            }
 
-  .discount-note {
-    font-size: 0.85rem;
-    color: #aaa;
-    text-align: center;
-    margin-top: -12px;
-  }
-</style>
-</head>
-<body>
+            .discount-note {
+                font-size: 0.85rem;
+                color: #aaa;
+                text-align: center;
+                margin-top: -12px;
+            }
 
-<h1>VAT Calculator</h1>
+            .cash-fund-bar {
+                width: 100%;
+                max-width: 480px;
+                background: #16213e;
+                border-radius: 16px;
+                padding: 18px 24px;
+                margin-top: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+            }
 
-<div class="card">
-  <div class="field">
-    <label for="mealCost">Total Cost of Meal</label>
-    <input type="number" id="mealCost" inputmode="decimal" placeholder="0.00" min="0" step="0.01">
-  </div>
+            .cash-fund-bar .fund-label {
+                font-size: 1rem;
+                color: #aaa;
+                font-weight: 600;
+            }
 
-  <div class="field">
-    <label>VAT (12%)</label>
-    <div class="result-box" id="vatAmount">0.00</div>
-  </div>
+            .cash-fund-bar .fund-amount {
+                font-size: 1.6rem;
+                font-weight: 700;
+                color: #4ecca3;
+            }
 
-  <div class="field">
-    <label>Cost Without VAT</label>
-    <div class="result-box" id="costWithoutVat">0.00</div>
-  </div>
+            .btn-row {
+                width: 100%;
+                max-width: 480px;
+                display: flex;
+                gap: 12px;
+                margin-top: 12px;
+            }
 
-  <hr class="divider">
+            .btn {
+                flex: 1;
+                font-size: 1.1rem;
+                font-weight: 700;
+                padding: 16px 12px;
+                border: none;
+                border-radius: 12px;
+                cursor: pointer;
+                color: #fff;
+            }
 
-  <div class="pwd-row">
-    <input type="checkbox" id="pwdDiscount">
-    <label for="pwdDiscount">PWD Discount (20% off)</label>
-  </div>
+            .btn-cash {
+                background: #4ecca3;
+                color: #1a1a2e;
+            }
 
-  <div class="field">
-    <label class="total-label">Final Amount Due</label>
-    <div class="total-value" id="finalSum">0.00</div>
-  </div>
-  <div class="discount-note" id="discountNote"></div>
-</div>
+            .btn-newday {
+                background: #0f3460;
+            }
 
-<script>
-  const mealCostInput = document.getElementById('mealCost');
-  const vatAmountEl = document.getElementById('vatAmount');
-  const costWithoutVatEl = document.getElementById('costWithoutVat');
-  const pwdCheckbox = document.getElementById('pwdDiscount');
-  const finalSumEl = document.getElementById('finalSum');
-  const discountNoteEl = document.getElementById('discountNote');
+            .modal-overlay {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.7);
+                z-index: 100;
+                align-items: center;
+                justify-content: center;
+                padding: 16px;
+            }
 
-  function fmt(n) {
-    return n.toFixed(2);
-  }
+            .modal-overlay.active {
+                display: flex;
+            }
 
-  function calculate() {
-    const total = parseFloat(mealCostInput.value) || 0;
-    const vat = total * 0.12;
-    const withoutVat = total - vat;
+            .modal {
+                background: #16213e;
+                border-radius: 16px;
+                padding: 28px 24px;
+                width: 100%;
+                max-width: 420px;
+                display: flex;
+                flex-direction: column;
+                gap: 18px;
+            }
 
-    vatAmountEl.textContent = fmt(vat);
-    costWithoutVatEl.textContent = fmt(withoutVat);
+            .modal h2 {
+                font-size: 1.4rem;
+                color: #4ecca3;
+                text-align: center;
+            }
 
-    if (pwdCheckbox.checked) {
-      const discount = total * 0.20;
-      const final = total - discount;
-      finalSumEl.textContent = fmt(final);
-      discountNoteEl.textContent = 'Discount: -' + fmt(discount);
-    } else {
-      finalSumEl.textContent = fmt(total);
-      discountNoteEl.textContent = '';
-    }
-  }
+            .modal .result-box {
+                font-size: 1.6rem;
+            }
 
-  mealCostInput.addEventListener('input', calculate);
-  pwdCheckbox.addEventListener('change', calculate);
+            .modal-btns {
+                display: flex;
+                gap: 12px;
+                margin-top: 4px;
+            }
 
-  // Register service worker for offline support
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js');
-  }
-</script>
+            .modal-btns .btn {
+                font-size: 1.05rem;
+                padding: 14px;
+            }
 
-</body>
+            .btn-confirm {
+                background: #4ecca3;
+                color: #1a1a2e;
+            }
+
+            .btn-cancel {
+                background: #e94560;
+            }
+
+            .change-positive {
+                color: #4ecca3;
+            }
+            .change-negative {
+                color: #e94560;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>VAT Calculator</h1>
+
+        <div class="card">
+            <div class="field">
+                <label for="mealCost">Total Cost of Meal</label>
+                <input
+                    type="number"
+                    id="mealCost"
+                    inputmode="decimal"
+                    placeholder="0.00"
+                    min="0"
+                    step="0.01"
+                />
+            </div>
+
+            <div class="field">
+                <label>VAT (12%)</label>
+                <div class="result-box" id="vatAmount">0.00</div>
+            </div>
+
+            <div class="field">
+                <label>Cost Without VAT</label>
+                <div class="result-box" id="costWithoutVat">0.00</div>
+            </div>
+
+            <hr class="divider" />
+
+            <div class="pwd-row">
+                <input type="checkbox" id="pwdDiscount" />
+                <label for="pwdDiscount">PWD Discount (20% off)</label>
+            </div>
+
+            <div class="field">
+                <label class="total-label">Final Amount Due</label>
+                <div class="total-value" id="finalSum">0.00</div>
+            </div>
+            <div class="discount-note" id="discountNote"></div>
+        </div>
+
+        <div class="cash-fund-bar">
+            <span class="fund-label">Cash Fund</span>
+            <span class="fund-amount" id="cashFund">4,000.00</span>
+        </div>
+
+        <div class="btn-row">
+            <button class="btn btn-cash" id="btnCashPay">
+                Customer Pays Cash
+            </button>
+            <button class="btn btn-newday" id="btnNewDay">New Day</button>
+        </div>
+
+        <div class="modal-overlay" id="cashModal">
+            <div class="modal">
+                <h2>Cash Payment</h2>
+                <div class="field">
+                    <label>Amount Due</label>
+                    <div class="result-box" id="modalAmountDue">0.00</div>
+                </div>
+                <div class="field">
+                    <label for="cashGiven">Cash Given by Customer</label>
+                    <input
+                        type="number"
+                        id="cashGiven"
+                        inputmode="decimal"
+                        placeholder="0.00"
+                        min="0"
+                        step="0.01"
+                    />
+                </div>
+                <div class="field">
+                    <label>Change to Give Back</label>
+                    <div class="result-box" id="changeAmount">0.00</div>
+                </div>
+                <div class="modal-btns">
+                    <button class="btn btn-confirm" id="btnConfirmCash">
+                        Confirm
+                    </button>
+                    <button class="btn btn-cancel" id="btnCancelCash">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            const mealCostInput = document.getElementById("mealCost");
+            const vatAmountEl = document.getElementById("vatAmount");
+            const costWithoutVatEl = document.getElementById("costWithoutVat");
+            const pwdCheckbox = document.getElementById("pwdDiscount");
+            const finalSumEl = document.getElementById("finalSum");
+            const discountNoteEl = document.getElementById("discountNote");
+
+            function fmt(n) {
+                return n.toFixed(2);
+            }
+
+            function calculate() {
+                const total = parseFloat(mealCostInput.value) || 0;
+                const vat = total * 0.12;
+                const withoutVat = total - vat;
+
+                vatAmountEl.textContent = fmt(vat);
+                costWithoutVatEl.textContent = fmt(withoutVat);
+
+                if (pwdCheckbox.checked) {
+                    const discount = total * 0.2;
+                    const final = total - discount;
+                    finalSumEl.textContent = fmt(final);
+                    discountNoteEl.textContent = "Discount: -" + fmt(discount);
+                } else {
+                    finalSumEl.textContent = fmt(total);
+                    discountNoteEl.textContent = "";
+                }
+            }
+
+            mealCostInput.addEventListener("input", calculate);
+            pwdCheckbox.addEventListener("change", calculate);
+
+            // Cash fund
+            const STARTING_FUND = 4000;
+            let cashFund =
+                parseFloat(localStorage.getItem("cashFund")) || STARTING_FUND;
+
+            const cashFundEl = document.getElementById("cashFund");
+            const cashModal = document.getElementById("cashModal");
+            const modalAmountDue = document.getElementById("modalAmountDue");
+            const cashGivenInput = document.getElementById("cashGiven");
+            const changeAmountEl = document.getElementById("changeAmount");
+            const btnCashPay = document.getElementById("btnCashPay");
+            const btnNewDay = document.getElementById("btnNewDay");
+            const btnConfirmCash = document.getElementById("btnConfirmCash");
+            const btnCancelCash = document.getElementById("btnCancelCash");
+
+            function fmtFund(n) {
+                return n.toLocaleString("en", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                });
+            }
+
+            function updateFundDisplay() {
+                cashFundEl.textContent = fmtFund(cashFund);
+                localStorage.setItem("cashFund", cashFund);
+            }
+
+            function getAmountDue() {
+                return parseFloat(finalSumEl.textContent) || 0;
+            }
+
+            function updateChange() {
+                const given = parseFloat(cashGivenInput.value) || 0;
+                const due = getAmountDue();
+                const change = given - due;
+                changeAmountEl.textContent = fmt(change);
+                changeAmountEl.className =
+                    "result-box " +
+                    (change >= 0 ? "change-positive" : "change-negative");
+            }
+
+            btnCashPay.addEventListener("click", function () {
+                modalAmountDue.textContent = finalSumEl.textContent;
+                cashGivenInput.value = "";
+                changeAmountEl.textContent = "0.00";
+                changeAmountEl.className = "result-box";
+                cashModal.classList.add("active");
+                cashGivenInput.focus();
+            });
+
+            cashGivenInput.addEventListener("input", updateChange);
+
+            btnConfirmCash.addEventListener("click", function () {
+                const given = parseFloat(cashGivenInput.value) || 0;
+                const due = getAmountDue();
+                const change = given - due;
+                // Fund receives the cash given, then gives back change
+                cashFund = cashFund + given - change;
+                updateFundDisplay();
+                cashModal.classList.remove("active");
+            });
+
+            btnCancelCash.addEventListener("click", function () {
+                cashModal.classList.remove("active");
+            });
+
+            btnNewDay.addEventListener("click", function () {
+                if (
+                    confirm(
+                        "Start a new day? This will reset the cash fund to " +
+                            fmtFund(STARTING_FUND) +
+                            ".",
+                    )
+                ) {
+                    cashFund = STARTING_FUND;
+                    updateFundDisplay();
+                }
+            });
+
+            updateFundDisplay();
+
+            // Register service worker for offline support
+            if ("serviceWorker" in navigator) {
+                navigator.serviceWorker.register("sw.js");
+            }
+        </script>
+    </body>
 </html>
