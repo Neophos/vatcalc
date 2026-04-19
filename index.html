@@ -855,6 +855,9 @@
             }
 
             // ---- Menu grid ----
+            let menuLongPressed = false;
+            let menuPressTimer = null;
+
             function renderItemsInGrid(grid, items) {
                 grid.innerHTML = items
                     .map(function (item) {
@@ -892,29 +895,28 @@
                     .join("");
 
                 grid.querySelectorAll(".menu-item").forEach(function (el) {
-                    let pressTimer = null;
-                    let didLongPress = false;
-
                     el.addEventListener("pointerdown", function () {
-                        didLongPress = false;
-                        pressTimer = setTimeout(function () {
-                            didLongPress = true;
+                        menuLongPressed = false;
+                        clearTimeout(menuPressTimer);
+                        menuPressTimer = setTimeout(function () {
+                            menuLongPressed = true;
                             delete order[el.dataset.name];
                             updateOrderUI();
                         }, 500);
                     });
 
                     el.addEventListener("pointerup", function () {
-                        clearTimeout(pressTimer);
-                        if (!didLongPress) {
+                        clearTimeout(menuPressTimer);
+                        if (!menuLongPressed) {
                             order[el.dataset.name] =
                                 (order[el.dataset.name] || 0) + 1;
                             updateOrderUI();
                         }
+                        menuLongPressed = false;
                     });
 
                     el.addEventListener("pointerleave", function () {
-                        clearTimeout(pressTimer);
+                        clearTimeout(menuPressTimer);
                     });
 
                     el.addEventListener("contextmenu", function (e) {
