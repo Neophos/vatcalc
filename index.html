@@ -608,8 +608,10 @@
 
             <!-- Page 2: Menu -->
             <div class="page" id="pageMenu">
-                <h1>Menu Items</h1>
-                <div class="menu-grid" id="menuGrid"></div>
+                <h1>Food</h1>
+                <div class="menu-grid" id="menuGridFood"></div>
+                <h1 style="margin-top: 20px">Drinks</h1>
+                <div class="menu-grid" id="menuGridDrinks"></div>
             </div>
         </div>
 
@@ -676,12 +678,87 @@
         <script>
             // ---- Menu items (add image paths later) ----
             const MENU_ITEMS = [
-                { name: "Meal A", price: 99 },
-                { name: "Meal B", price: 129 },
-                { name: "Meal C", price: 149 },
-                { name: "Meal D", price: 179 },
-                { name: "Meal E", price: 199 },
-                { name: "Meal F", price: 249 },
+                // Food
+                { name: "Oh My BACON!", price: 175, category: "food" },
+                { name: "Hungarian Sausage 1pc", price: 185, category: "food" },
+                {
+                    name: "Hungarian Sausage 2pcs",
+                    price: 205,
+                    category: "food",
+                },
+                { name: "Chicken Spam", price: 150, category: "food" },
+                { name: "Homemade Longganisa", price: 175, category: "food" },
+                {
+                    name: "Old-Fashioned Pancakes",
+                    price: 145,
+                    category: "food",
+                },
+                { name: "Pancakes and Bacon", price: 165, category: "food" },
+                { name: "Corned Beef", price: 155, category: "food" },
+                {
+                    name: "Cheeky Chicken Pops w/ Fries",
+                    price: 155,
+                    category: "food",
+                },
+                { name: "Chicken Wings (6s)", price: 230, category: "food" },
+                { name: "Truffle Fries", price: 150, category: "food" },
+                { name: "Coco Chicken Rice", price: 175, category: "food" },
+                {
+                    name: "3pc Chicken Wings w/ Rice",
+                    price: 170,
+                    category: "food",
+                },
+                { name: "Beef Lasagna", price: 150, category: "food" },
+                { name: "Boss Burger", price: 295, category: "food" },
+                { name: "Chicken Burger", price: 285, category: "food" },
+                // Drinks
+                { name: "Fizzy Drink", price: 110, category: "drink" },
+                { name: "Milkshake", price: 160, category: "drink" },
+                { name: "ICED Chocolate", price: 130, category: "drink" },
+                { name: "Soda", price: 80, category: "drink" },
+                { name: "Espresso", price: 80, category: "drink" },
+                { name: "Americano HOT", price: 105, category: "drink" },
+                { name: "Americano ICED", price: 110, category: "drink" },
+                { name: "Spanish Latte HOT", price: 120, category: "drink" },
+                { name: "Spanish Latte ICED", price: 130, category: "drink" },
+                { name: "Cafe Latte HOT", price: 110, category: "drink" },
+                { name: "Cafe Latte ICED", price: 120, category: "drink" },
+                {
+                    name: "Caramel Macchiato HOT",
+                    price: 145,
+                    category: "drink",
+                },
+                {
+                    name: "Caramel Macchiato ICED",
+                    price: 155,
+                    category: "drink",
+                },
+                { name: "Mocha Latte HOT", price: 130, category: "drink" },
+                { name: "Mocha Latte ICED", price: 140, category: "drink" },
+                { name: "Cappuccino HOT", price: 110, category: "drink" },
+                { name: "Cappuccino ICED", price: 120, category: "drink" },
+                {
+                    name: "Irish Cream Latte HOT",
+                    price: 155,
+                    category: "drink",
+                },
+                {
+                    name: "Irish Cream Latte ICED",
+                    price: 165,
+                    category: "drink",
+                },
+                { name: "Salt Latte HOT", price: 155, category: "drink" },
+                { name: "Salt Latte ICED", price: 165, category: "drink" },
+                {
+                    name: "Coconut Shaken Coffee HOT",
+                    price: 155,
+                    category: "drink",
+                },
+                {
+                    name: "Coconut Shaken Coffee ICED",
+                    price: 165,
+                    category: "drink",
+                },
             ];
 
             // ---- Order state ----
@@ -696,7 +773,8 @@
             const discountNoteEl = document.getElementById("discountNote");
             const orderSummaryEl = document.getElementById("orderSummary");
             const orderListEl = document.getElementById("orderList");
-            const menuGrid = document.getElementById("menuGrid");
+            const menuGridFood = document.getElementById("menuGridFood");
+            const menuGridDrinks = document.getElementById("menuGridDrinks");
 
             function fmt(n) {
                 return n.toFixed(2);
@@ -777,51 +855,51 @@
             }
 
             // ---- Menu grid ----
-            function renderMenuGrid() {
-                menuGrid.innerHTML = MENU_ITEMS.map((item) => {
-                    const qty = order[item.name] || 0;
-                    const hasOrder = qty > 0;
-                    const imgHtml = item.image
-                        ? '<img class="item-img" src="' +
-                          item.image +
-                          '" alt="' +
-                          item.name +
-                          '">'
-                        : '<div class="item-placeholder">' +
-                          item.name.charAt(0) +
-                          "</div>";
-                    const badge = hasOrder
-                        ? '<div class="item-badge">' + qty + "</div>"
-                        : "";
-                    return (
-                        '<div class="menu-item' +
-                        (hasOrder ? " in-order" : "") +
-                        '" data-name="' +
-                        item.name +
-                        '">' +
-                        badge +
-                        imgHtml +
-                        '<div class="item-name">' +
-                        item.name +
-                        "</div>" +
-                        '<div class="item-price">' +
-                        fmt(item.price) +
-                        "</div>" +
-                        "</div>"
-                    );
-                }).join("");
+            function renderItemsInGrid(grid, items) {
+                grid.innerHTML = items
+                    .map(function (item) {
+                        const qty = order[item.name] || 0;
+                        const hasOrder = qty > 0;
+                        const imgHtml = item.image
+                            ? '<img class="item-img" src="' +
+                              item.image +
+                              '" alt="' +
+                              item.name +
+                              '">'
+                            : '<div class="item-placeholder">' +
+                              item.name.charAt(0) +
+                              "</div>";
+                        const badge = hasOrder
+                            ? '<div class="item-badge">' + qty + "</div>"
+                            : "";
+                        return (
+                            '<div class="menu-item' +
+                            (hasOrder ? " in-order" : "") +
+                            '" data-name="' +
+                            item.name +
+                            '">' +
+                            badge +
+                            imgHtml +
+                            '<div class="item-name">' +
+                            item.name +
+                            "</div>" +
+                            '<div class="item-price">' +
+                            fmt(item.price) +
+                            "</div>" +
+                            "</div>"
+                        );
+                    })
+                    .join("");
 
-                // Attach tap and long-press handlers
-                menuGrid.querySelectorAll(".menu-item").forEach((el) => {
+                grid.querySelectorAll(".menu-item").forEach(function (el) {
                     let pressTimer = null;
                     let didLongPress = false;
 
-                    el.addEventListener("pointerdown", function (e) {
+                    el.addEventListener("pointerdown", function () {
                         didLongPress = false;
                         pressTimer = setTimeout(function () {
                             didLongPress = true;
-                            const name = el.dataset.name;
-                            delete order[name];
+                            delete order[el.dataset.name];
                             updateOrderUI();
                         }, 500);
                     });
@@ -829,8 +907,8 @@
                     el.addEventListener("pointerup", function () {
                         clearTimeout(pressTimer);
                         if (!didLongPress) {
-                            const name = el.dataset.name;
-                            order[name] = (order[name] || 0) + 1;
+                            order[el.dataset.name] =
+                                (order[el.dataset.name] || 0) + 1;
                             updateOrderUI();
                         }
                     });
@@ -839,11 +917,25 @@
                         clearTimeout(pressTimer);
                     });
 
-                    // Prevent context menu on long press
                     el.addEventListener("contextmenu", function (e) {
                         e.preventDefault();
                     });
                 });
+            }
+
+            function renderMenuGrid() {
+                renderItemsInGrid(
+                    menuGridFood,
+                    MENU_ITEMS.filter(function (i) {
+                        return i.category === "food";
+                    }),
+                );
+                renderItemsInGrid(
+                    menuGridDrinks,
+                    MENU_ITEMS.filter(function (i) {
+                        return i.category === "drink";
+                    }),
+                );
             }
 
             renderMenuGrid();
