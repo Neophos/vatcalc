@@ -21,22 +21,71 @@
                 box-sizing: border-box;
             }
 
+            html,
             body {
+                height: 100%;
+                overflow: hidden;
                 font-family:
                     -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
                     sans-serif;
                 background: #1a1a2e;
                 color: #eee;
-                min-height: 100vh;
+            }
+
+            /* Page dots */
+            .page-dots {
+                display: flex;
+                justify-content: center;
+                gap: 8px;
+                padding: 12px 0 4px;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 50;
+                background: #1a1a2e;
+            }
+
+            .page-dots .dot {
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                background: #0f3460;
+                transition: background 0.2s;
+            }
+
+            .page-dots .dot.active {
+                background: #e94560;
+            }
+
+            /* Swipe container */
+            .pages-container {
+                display: flex;
+                overflow-x: auto;
+                scroll-snap-type: x mandatory;
+                -webkit-overflow-scrolling: touch;
+                height: 100%;
+                scrollbar-width: none;
+            }
+
+            .pages-container::-webkit-scrollbar {
+                display: none;
+            }
+
+            .page {
+                min-width: 100vw;
+                scroll-snap-align: start;
+                overflow-y: auto;
+                padding: 40px 16px 24px;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                padding: 24px 16px;
             }
 
+            /* Shared styles */
             h1 {
                 font-size: 1.6rem;
-                margin-bottom: 24px;
+                margin-bottom: 16px;
                 text-align: center;
                 color: #e94560;
             }
@@ -143,6 +192,47 @@
                 margin-top: -12px;
             }
 
+            /* Order summary */
+            .order-summary {
+                width: 100%;
+                max-width: 480px;
+                background: #16213e;
+                border-radius: 16px;
+                padding: 16px 24px;
+                margin-bottom: 12px;
+                display: none;
+            }
+
+            .order-summary.has-items {
+                display: block;
+            }
+
+            .order-summary h2 {
+                font-size: 1.1rem;
+                color: #e94560;
+                margin-bottom: 8px;
+            }
+
+            .order-summary ul {
+                list-style: none;
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+            }
+
+            .order-summary li {
+                display: flex;
+                justify-content: space-between;
+                font-size: 1rem;
+                color: #ccc;
+            }
+
+            .order-summary li .item-total {
+                color: #fff;
+                font-weight: 600;
+            }
+
+            /* Cash fund bar */
             .cash-fund-bar {
                 width: 100%;
                 max-width: 480px;
@@ -191,16 +281,15 @@
                 background: #4ecca3;
                 color: #1a1a2e;
             }
-
             .btn-expense {
                 background: #e9a045;
                 color: #1a1a2e;
             }
-
             .btn-newday {
                 background: #0f3460;
             }
 
+            /* Modal */
             .modal-overlay {
                 display: none;
                 position: fixed;
@@ -252,7 +341,6 @@
                 background: #4ecca3;
                 color: #1a1a2e;
             }
-
             .btn-cancel {
                 background: #e94560;
             }
@@ -263,63 +351,174 @@
             .change-negative {
                 color: #e94560;
             }
+
+            /* Menu page */
+            .menu-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+                width: 100%;
+                max-width: 480px;
+            }
+
+            .menu-item {
+                background: #16213e;
+                border: 2px solid #0f3460;
+                border-radius: 16px;
+                padding: 12px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 6px;
+                min-height: 120px;
+                cursor: pointer;
+                user-select: none;
+                -webkit-user-select: none;
+                touch-action: manipulation;
+                transition:
+                    border-color 0.15s,
+                    transform 0.1s;
+                position: relative;
+            }
+
+            .menu-item:active {
+                transform: scale(0.96);
+            }
+
+            .menu-item.in-order {
+                border-color: #4ecca3;
+            }
+
+            .menu-item .item-img {
+                width: 56px;
+                height: 56px;
+                border-radius: 12px;
+                object-fit: cover;
+            }
+
+            .menu-item .item-placeholder {
+                width: 56px;
+                height: 56px;
+                border-radius: 12px;
+                background: #0f3460;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.6rem;
+                font-weight: 700;
+                color: #e94560;
+            }
+
+            .menu-item .item-name {
+                font-size: 1rem;
+                font-weight: 700;
+                color: #eee;
+                text-align: center;
+            }
+
+            .menu-item .item-price {
+                font-size: 0.9rem;
+                color: #4ecca3;
+                font-weight: 600;
+            }
+
+            .menu-item .item-badge {
+                position: absolute;
+                top: 8px;
+                right: 8px;
+                background: #e94560;
+                color: #fff;
+                font-size: 0.85rem;
+                font-weight: 700;
+                width: 26px;
+                height: 26px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
         </style>
     </head>
     <body>
-        <h1>VAT Calculator</h1>
-
-        <div class="card">
-            <div class="field">
-                <label for="mealCost">Total Cost of Meal</label>
-                <input
-                    type="number"
-                    id="mealCost"
-                    inputmode="decimal"
-                    placeholder="0.00"
-                    min="0"
-                    step="0.01"
-                />
-            </div>
-
-            <div class="field">
-                <label>Less: VAT</label>
-                <div class="result-box" id="vatAmount">0.00</div>
-            </div>
-
-            <div class="field">
-                <label>Amount: Net of VAT</label>
-                <div class="result-box" id="costWithoutVat">0.00</div>
-            </div>
-
-            <hr class="divider" />
-
-            <div class="pwd-row">
-                <input type="checkbox" id="pwdDiscount" />
-                <label for="pwdDiscount">PWD Discount (20% off)</label>
-            </div>
-
-            <div class="field">
-                <label class="total-label">Final Amount Due</label>
-                <div class="total-value" id="finalSum">0.00</div>
-            </div>
-            <div class="discount-note" id="discountNote"></div>
+        <div class="page-dots">
+            <div class="dot active" data-page="0"></div>
+            <div class="dot" data-page="1"></div>
         </div>
 
-        <div class="cash-fund-bar">
-            <span class="fund-label">Cash Fund</span>
-            <span class="fund-amount" id="cashFund">4,000.00</span>
+        <div class="pages-container" id="pagesContainer">
+            <!-- Page 1: Calculator -->
+            <div class="page" id="pageCalc">
+                <h1>VAT Calculator</h1>
+
+                <div class="order-summary" id="orderSummary">
+                    <h2>Current Order</h2>
+                    <ul id="orderList"></ul>
+                </div>
+
+                <div class="card">
+                    <div class="field">
+                        <label for="mealCost">Total Cost of Meal</label>
+                        <input
+                            type="number"
+                            id="mealCost"
+                            inputmode="decimal"
+                            placeholder="0.00"
+                            min="0"
+                            step="0.01"
+                        />
+                    </div>
+
+                    <div class="field">
+                        <label>Less: VAT</label>
+                        <div class="result-box" id="vatAmount">0.00</div>
+                    </div>
+
+                    <div class="field">
+                        <label>Amount: Net of VAT</label>
+                        <div class="result-box" id="costWithoutVat">0.00</div>
+                    </div>
+
+                    <hr class="divider" />
+
+                    <div class="pwd-row">
+                        <input type="checkbox" id="pwdDiscount" />
+                        <label for="pwdDiscount">PWD Discount (20% off)</label>
+                    </div>
+
+                    <div class="field">
+                        <label class="total-label">Final Amount Due</label>
+                        <div class="total-value" id="finalSum">0.00</div>
+                    </div>
+                    <div class="discount-note" id="discountNote"></div>
+                </div>
+
+                <div class="cash-fund-bar">
+                    <span class="fund-label">Cash Fund</span>
+                    <span class="fund-amount" id="cashFund">4,000.00</span>
+                </div>
+
+                <div class="btn-row">
+                    <button class="btn btn-cash" id="btnCashPay">
+                        Customer Pays Cash
+                    </button>
+                    <button class="btn btn-expense" id="btnExpense">
+                        Cash Expense
+                    </button>
+                    <button class="btn btn-newday" id="btnNewDay">
+                        New Day
+                    </button>
+                </div>
+            </div>
+
+            <!-- Page 2: Menu -->
+            <div class="page" id="pageMenu">
+                <h1>Menu Items</h1>
+                <div class="menu-grid" id="menuGrid"></div>
+            </div>
         </div>
 
-        <div class="btn-row">
-            <button class="btn btn-cash" id="btnCashPay">
-                Customer Pays Cash
-            </button>
-            <button class="btn btn-expense" id="btnExpense">
-                Cash Expense
-            </button>
-            <button class="btn btn-newday" id="btnNewDay">New Day</button>
-        </div>
-
+        <!-- Cash Payment Modal -->
         <div class="modal-overlay" id="cashModal">
             <div class="modal">
                 <h2>Cash Payment</h2>
@@ -353,6 +552,7 @@
             </div>
         </div>
 
+        <!-- Expense Modal -->
         <div class="modal-overlay" id="expenseModal">
             <div class="modal">
                 <h2>Cash Expense</h2>
@@ -379,17 +579,35 @@
         </div>
 
         <script>
+            // ---- Menu items (add image paths later) ----
+            const MENU_ITEMS = [
+                { name: "Meal A", price: 99 },
+                { name: "Meal B", price: 129 },
+                { name: "Meal C", price: 149 },
+                { name: "Meal D", price: 179 },
+                { name: "Meal E", price: 199 },
+                { name: "Meal F", price: 249 },
+            ];
+
+            // ---- Order state ----
+            const order = {};
+
+            // ---- DOM refs ----
             const mealCostInput = document.getElementById("mealCost");
             const vatAmountEl = document.getElementById("vatAmount");
             const costWithoutVatEl = document.getElementById("costWithoutVat");
             const pwdCheckbox = document.getElementById("pwdDiscount");
             const finalSumEl = document.getElementById("finalSum");
             const discountNoteEl = document.getElementById("discountNote");
+            const orderSummaryEl = document.getElementById("orderSummary");
+            const orderListEl = document.getElementById("orderList");
+            const menuGrid = document.getElementById("menuGrid");
 
             function fmt(n) {
                 return n.toFixed(2);
             }
 
+            // ---- VAT calculation ----
             function calculate() {
                 const total = parseFloat(mealCostInput.value) || 0;
                 const withoutVat = total / 1.12;
@@ -400,8 +618,7 @@
 
                 if (pwdCheckbox.checked) {
                     const discount = total * 0.2;
-                    const final = total - discount;
-                    finalSumEl.textContent = fmt(final);
+                    finalSumEl.textContent = fmt(total - discount);
                     discountNoteEl.textContent = "Discount: -" + fmt(discount);
                 } else {
                     finalSumEl.textContent = fmt(total);
@@ -412,7 +629,144 @@
             mealCostInput.addEventListener("input", calculate);
             pwdCheckbox.addEventListener("change", calculate);
 
-            // Cash fund
+            // ---- Order logic ----
+            function getOrderTotal() {
+                let sum = 0;
+                for (const name in order) {
+                    const item = MENU_ITEMS.find((i) => i.name === name);
+                    if (item) sum += item.price * order[name];
+                }
+                return sum;
+            }
+
+            function updateOrderUI() {
+                // Update summary
+                const keys = Object.keys(order).filter((k) => order[k] > 0);
+                if (keys.length === 0) {
+                    orderSummaryEl.classList.remove("has-items");
+                    orderListEl.innerHTML = "";
+                } else {
+                    orderSummaryEl.classList.add("has-items");
+                    orderListEl.innerHTML = keys
+                        .map((name) => {
+                            const item = MENU_ITEMS.find(
+                                (i) => i.name === name,
+                            );
+                            const qty = order[name];
+                            return (
+                                "<li><span>" +
+                                qty +
+                                "x " +
+                                name +
+                                '</span><span class="item-total">' +
+                                fmt(item.price * qty) +
+                                "</span></li>"
+                            );
+                        })
+                        .join("");
+                }
+
+                // Update meal cost input and recalculate
+                const total = getOrderTotal();
+                mealCostInput.value = total > 0 ? fmt(total) : "";
+                calculate();
+
+                // Update menu button badges
+                renderMenuGrid();
+            }
+
+            function clearOrder() {
+                for (const key in order) delete order[key];
+                updateOrderUI();
+                pwdCheckbox.checked = false;
+            }
+
+            // ---- Menu grid ----
+            function renderMenuGrid() {
+                menuGrid.innerHTML = MENU_ITEMS.map((item) => {
+                    const qty = order[item.name] || 0;
+                    const hasOrder = qty > 0;
+                    const imgHtml = item.image
+                        ? '<img class="item-img" src="' +
+                          item.image +
+                          '" alt="' +
+                          item.name +
+                          '">'
+                        : '<div class="item-placeholder">' +
+                          item.name.charAt(0) +
+                          "</div>";
+                    const badge = hasOrder
+                        ? '<div class="item-badge">' + qty + "</div>"
+                        : "";
+                    return (
+                        '<div class="menu-item' +
+                        (hasOrder ? " in-order" : "") +
+                        '" data-name="' +
+                        item.name +
+                        '">' +
+                        badge +
+                        imgHtml +
+                        '<div class="item-name">' +
+                        item.name +
+                        "</div>" +
+                        '<div class="item-price">' +
+                        fmt(item.price) +
+                        "</div>" +
+                        "</div>"
+                    );
+                }).join("");
+
+                // Attach tap and long-press handlers
+                menuGrid.querySelectorAll(".menu-item").forEach((el) => {
+                    let pressTimer = null;
+                    let didLongPress = false;
+
+                    el.addEventListener("pointerdown", function (e) {
+                        didLongPress = false;
+                        pressTimer = setTimeout(function () {
+                            didLongPress = true;
+                            const name = el.dataset.name;
+                            delete order[name];
+                            updateOrderUI();
+                        }, 500);
+                    });
+
+                    el.addEventListener("pointerup", function () {
+                        clearTimeout(pressTimer);
+                        if (!didLongPress) {
+                            const name = el.dataset.name;
+                            order[name] = (order[name] || 0) + 1;
+                            updateOrderUI();
+                        }
+                    });
+
+                    el.addEventListener("pointerleave", function () {
+                        clearTimeout(pressTimer);
+                    });
+
+                    // Prevent context menu on long press
+                    el.addEventListener("contextmenu", function (e) {
+                        e.preventDefault();
+                    });
+                });
+            }
+
+            renderMenuGrid();
+
+            // ---- Page dots / swipe indicator ----
+            const pagesContainer = document.getElementById("pagesContainer");
+            const dots = document.querySelectorAll(".page-dots .dot");
+
+            pagesContainer.addEventListener("scroll", function () {
+                const scrollLeft = pagesContainer.scrollLeft;
+                const pageWidth = pagesContainer.offsetWidth;
+                const pageIndex = Math.round(scrollLeft / pageWidth);
+                dots.forEach((d, i) =>
+                    d.classList.toggle("active", i === pageIndex),
+                );
+            });
+
+            // ---- Cash fund ----
             const STARTING_FUND = 4000;
             let cashFund =
                 parseFloat(localStorage.getItem("cashFund")) || STARTING_FUND;
@@ -468,10 +822,10 @@
                 const given = parseFloat(cashGivenInput.value) || 0;
                 const due = getAmountDue();
                 const change = given - due;
-                // Fund receives the cash given, then gives back change
                 cashFund = cashFund + given - change;
                 updateFundDisplay();
                 cashModal.classList.remove("active");
+                clearOrder();
             });
 
             btnCancelCash.addEventListener("click", function () {
@@ -491,7 +845,7 @@
                 }
             });
 
-            // Cash expense
+            // ---- Cash expense ----
             const expenseModal = document.getElementById("expenseModal");
             const expenseAmountInput = document.getElementById("expenseAmount");
             const btnExpense = document.getElementById("btnExpense");
@@ -519,7 +873,7 @@
 
             updateFundDisplay();
 
-            // Register service worker for offline support
+            // ---- Service worker ----
             if ("serviceWorker" in navigator) {
                 navigator.serviceWorker.register("sw.js");
             }
