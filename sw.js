@@ -1,4 +1,4 @@
-const CACHE = "vatcalc-v5";
+const CACHE = "vatcalc-v6";
 const ASSETS = ["./", "index.html", "manifest.json", "icon.svg"];
 
 self.addEventListener("install", (e) => {
