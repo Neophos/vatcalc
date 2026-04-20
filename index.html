@@ -377,6 +377,14 @@
                 color: #888;
             }
 
+            .history-list .sale-edit {
+                color: #5b8dee;
+                cursor: pointer;
+                font-size: 0.8rem;
+                margin-left: 8px;
+                text-decoration: underline;
+            }
+
             /* Modal */
             .modal-overlay {
                 display: none;
@@ -1012,7 +1020,13 @@
                 } else {
                     historyEmpty.style.display = "none";
                     historyList.innerHTML = salesHistory
-                        .map(function (s) {
+                        .map(function (s, i) {
+                            var editBtn =
+                                s.method === "expense"
+                                    ? ' <span class="sale-edit" data-idx="' +
+                                      i +
+                                      '">edit</span>'
+                                    : "";
                             return (
                                 "<li>" +
                                 '<div class="sale-header"><span>' +
@@ -1031,11 +1045,33 @@
                                 "</div>" +
                                 '<div class="sale-items">' +
                                 s.items +
+                                editBtn +
                                 "</div>" +
                                 "</li>"
                             );
                         })
                         .join("");
+
+                    historyList
+                        .querySelectorAll(".sale-edit")
+                        .forEach(function (btn) {
+                            btn.addEventListener("click", function () {
+                                var idx = parseInt(btn.dataset.idx);
+                                var entry = salesHistory[idx];
+                                var newNote = prompt(
+                                    "Edit expense note:",
+                                    entry.items,
+                                );
+                                if (newNote !== null && newNote.trim() !== "") {
+                                    entry.items = newNote.trim();
+                                    localStorage.setItem(
+                                        "salesHistory",
+                                        JSON.stringify(salesHistory),
+                                    );
+                                    renderHistory();
+                                }
+                            });
+                        });
                 }
             }
 
